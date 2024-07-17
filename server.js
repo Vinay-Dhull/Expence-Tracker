@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const colors = require("colors");
 const path = require("path");
 const connectDb = require("./config/connectDb");
+const job =require(`~/cron.js`);
  
 dotenv.config();
 
@@ -12,9 +13,10 @@ dotenv.config();
 
  const app = express();
 
- app.use(morgan("dev"));
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(cors());
+
 
 // Routes
 // User routes
@@ -26,8 +28,8 @@ app.use("/api/v1/transactions", require("./routes/transactionRoutes"));
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, "./client/build")));
 
- app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "./client/build/index.html"));
+app.get("*", (req, res) => {
+res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
 
 // Define the port
@@ -37,3 +39,4 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+job.start();
