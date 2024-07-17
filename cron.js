@@ -1,31 +1,24 @@
-// Cron job to hit endpoint every 14 sec to keep backend alive always
 const cron = require('cron');
 const https = require('https');
 
-const backendUrl = 'provide_backend_api_endpoint_that_is_provided_by_rendor' ;
-const job = new cron.CronJob('/14 * ** ', function () {
-// This function will be executed every 14 minutes.
-console. log('Restarting server');
+const backendUrl = 'https://expence-tracker-v5t2.onrender.com';
+const job = new cron.CronJob("0 */14 * * * *", function () {
+  // This function will be executed every 14 seconds.
+  console.log('Pinging server to keep it alive');
 
-// Perform an HTTPS GET request to hit any backend api.
-https
-.get(backendUrl, (res) => {
-if (res.statusCode== 200) {
-console. log('Server restarted');
-} else {
-console. error(
-`failed to restart server with status code: ${res.statusCode}`
-   );
-  }
-})
-.on('error', (err) => {
-console.error('Error during Restart:', err.message);
-
- });
-
+  // Perform an HTTPS GET request to hit the backend API.
+  https.get(backendUrl, (res) => {
+    if (res.statusCode === 200) {
+      console.log('Server responded successfully');
+    } else {
+      console.error(`Failed to reach server with status code: ${res.statusCode}`);
+    }
+  }).on('error', (err) => {
+    console.error('Error during request:', err.message);
+  });
 });
 
 // Export the cron job.
 module.exports = {
-job,
+  job,
 };

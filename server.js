@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 const colors = require("colors");
 const path = require("path");
 const connectDb = require("./config/connectDb");
-const job =require(`~/cron.js`);
+const { job } = require("./cron.js");
  
 dotenv.config();
 
